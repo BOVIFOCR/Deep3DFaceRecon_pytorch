@@ -26,7 +26,7 @@ def data_prepare(folder_list,mode):
     lm_sess,input_op,output_op = load_lm_graph('./checkpoints/lm_model/68lm_detector.pb') # load a tensorflow version 68-landmark detector
 
     for img_folder in folder_list:
-        detect_5p(img_folder, detector, output_folder='detections', draw_landmarks=True)
+        detect_5p(img_folder, detector, output_folder='detections', draw_landmarks=False)
         detect_68p(img_folder,lm_sess,input_op,output_op) # detect landmarks for images
         get_skin_mask(img_folder) # generate skin attention mask for images
 
