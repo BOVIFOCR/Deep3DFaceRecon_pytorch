@@ -63,7 +63,7 @@ def load_lm_graph(graph_filename):
 
 # landmark detection
 def detect_68p(img_path,sess,input_op,output_op):
-    print('detecting landmarks......')
+    print('detecting 68 landmarks......')
     names = [i for i in sorted(os.listdir(
         img_path)) if 'jpg' in i or 'png' in i or 'jpeg' in i or 'PNG' in i]
     vis_path = os.path.join(img_path, 'vis')
@@ -113,6 +113,8 @@ def detect_68p(img_path,sess,input_op,output_op):
         landmark[:, 1] = landmark[:, 1] + bbox[1]
         landmark[:, 1] = img.shape[0] - 1 - landmark[:, 1]
 
-        if i % 100 == 0:
-            draw_landmarks(img, landmark, os.path.join(vis_path, name))
+        # if i % 100 == 0:
+        #     draw_landmarks(img, landmark, os.path.join(vis_path, name))
+        draw_landmarks(img, landmark, os.path.join(vis_path, name))
+
         save_label(landmark, os.path.join(save_path, txt_name))

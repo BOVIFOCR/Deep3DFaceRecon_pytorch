@@ -1,7 +1,7 @@
 """This script is the data preparation script for Deep3DFaceRecon_pytorch
 """
 
-import os 
+import os, sys
 import numpy as np
 import argparse
 from util.detect_lm68 import detect_68p,load_lm_graph
@@ -9,6 +9,8 @@ from util.skin_mask import get_skin_mask
 from util.generate_list import check_list, write_list
 import warnings
 warnings.filterwarnings("ignore") 
+
+from retinaface.detect_lm5 import load_retinaface_model, detect_5p
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_root', type=str, default='datasets', help='root directory for training data')
@@ -20,9 +22,11 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 def data_prepare(folder_list,mode):
 
+    detector = load_retinaface_model('./checkpoints/retinaface/retinaface_resnet50_2020-07-20_old_torch.pth')
     lm_sess,input_op,output_op = load_lm_graph('./checkpoints/lm_model/68lm_detector.pb') # load a tensorflow version 68-landmark detector
 
     for img_folder in folder_list:
+        detect_5p(img_folder, detector, output_folder='detections', draw_landmarks=True)
         detect_68p(img_folder,lm_sess,input_op,output_op) # detect landmarks for images
         get_skin_mask(img_folder) # generate skin attention mask for images
 
