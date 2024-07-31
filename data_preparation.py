@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_root', type=str, default='datasets', help='root directory for training data')
 parser.add_argument('--img_folder', nargs="+", required=True, help='folders of training images')
-parser.add_argument('--mode', type=str, default='train', help='train or val')
+parser.add_argument('--mode', type=str, default='val', help='train or val')
 opt = parser.parse_args()
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'

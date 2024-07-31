@@ -37,15 +37,27 @@ def load_data(img_name, txt_name):
 
 # create tensorflow graph for landmark detector
 def load_lm_graph(graph_filename):
-    with tf.gfile.GFile(graph_filename, 'rb') as f:
-        graph_def = tf.GraphDef()
-        graph_def.ParseFromString(f.read())
+    try:
+        with tf.gfile.GFile(graph_filename, 'rb') as f:
+            graph_def = tf.GraphDef()
+            graph_def.ParseFromString(f.read())
 
-    with tf.Graph().as_default() as graph:
-        tf.import_graph_def(graph_def, name='net')
-        img_224 = graph.get_tensor_by_name('net/input_imgs:0')
-        output_lm = graph.get_tensor_by_name('net/lm:0')
-        lm_sess = tf.Session(graph=graph)
+        with tf.Graph().as_default() as graph:
+            tf.import_graph_def(graph_def, name='net')
+            img_224 = graph.get_tensor_by_name('net/input_imgs:0')
+            output_lm = graph.get_tensor_by_name('net/lm:0')
+            lm_sess = tf.Session(graph=graph)
+
+    except AttributeError:   # Bernardo --> AttributeError: module 'tensorflow' has no attribute 'gfile'
+        with tf.io.gfile.GFile(graph_filename, 'rb') as f:
+            graph_def = tf.compat.v1.GraphDef()
+            graph_def.ParseFromString(f.read())
+        
+        with tf.Graph().as_default() as graph:
+            tf.import_graph_def(graph_def, name='net')
+            img_224 = graph.get_tensor_by_name('net/input_imgs:0')
+            output_lm = graph.get_tensor_by_name('net/lm:0')
+            lm_sess = tf.compat.v1.Session(graph=graph)
 
     return lm_sess,img_224,output_lm
 
