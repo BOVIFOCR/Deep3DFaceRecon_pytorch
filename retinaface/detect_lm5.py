@@ -54,9 +54,11 @@ def detect_5p(img_folder, detector=Model(), output_folder='detections', draw_lan
             results = detector.predict_jsons(rgb_image)
             # print('results:', results)
 
+            best_result = results[0]
             for result in results:
-                landmarks5 = result['landmarks']
-                save_5landmarks_textfile(landmarks5, full_txt_name)
-
+                if result['score'] > best_result['score']:
+                    best_result = result
+            landmarks5 = best_result['landmarks']
+            save_5landmarks_textfile(landmarks5, full_txt_name)
 
         # sys.exit(0)
